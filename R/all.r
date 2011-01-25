@@ -25,12 +25,19 @@ load_all <- function(pkg, reset = FALSE) {
     clear_classes(pkg)
     clear_pkg_env(pkg)
   }
+
+  if (name %in% search())
+    env <- as.environment(name)
+  else
+    env <- new.env(parent = globalenv())
   
-  env <- pkg_env(pkg)
   load_data(pkg, env)
   load_code(pkg, env)
   load_c(pkg)
 
+  if (!(name %in% search()))
+    attach(env, name = name)
+  
   invisible()  
 }
 
